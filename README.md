@@ -1,4 +1,4 @@
-# payment_service
+# user_service
 Demo service in microservice architecture
 
 ## 指令

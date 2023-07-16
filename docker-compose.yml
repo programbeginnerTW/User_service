@@ -1,0 +1,45 @@
+version: "3"
+
+services:
+    user-service:
+        image: webdevops/php:8.1
+        ports:
+            - 8084:8080
+        working_dir: /app
+        environment: 
+            - WEB_DOCUMENT_ROOT=/app/public
+            - PHP_MEMORY_LIMIT=512M
+            - PHP_MAX_EXECUTION_TIME=30
+            - PHP_POST_MAX_SIZE=20M
+            - PHP_UPLOAD_MAX_FILESIZE=20M
+        volumes:
+            - './app:/app'
+        command: >
+            bash -c "./rr serve"
+    user_DB:
+        image: postgres:11.12
+        environment:
+            POSTGRES_DB: user
+            POSTGRES_USER: root
+            POSTGRES_PASSWORD: root
+        volumes:
+            - user-db-data:/var/lib/postgresql/data/
+        ports:
+            - "8340:5432"
+        command: ["postgres", "-c", "logging_collector=on", "-c", "log_destination=stderr", "-c", "max_connections=10000"]
+
+    user_test_DB:
+        image: postgres:11.12
+        environment:
+            POSTGRES_DB: user
+            POSTGRES_USER: root
+            POSTGRES_PASSWORD: root
+        volumes:
+            - user-test-db-data:/var/lib/postgresql/data/
+        ports:
+            - "8341:5432"
+        command: ["postgres", "-c", "logging_collector=on", "-c", "log_destination=stderr", "-c", "max_connections=10000"]
+
+volumes:
+    user-db-data:
+    user-test-db-data:

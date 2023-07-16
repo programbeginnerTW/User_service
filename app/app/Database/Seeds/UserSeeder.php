@@ -8,7 +8,6 @@ class UserSeeder extends Seeder
 {
     public function run()
     {
-        $faker = static::faker();
         for ($i=0; $i < 5; $i++) {
             if ($i == 0) {
                 $balance = 900000000;

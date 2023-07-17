@@ -21,8 +21,9 @@ class History extends Migration
                 'unsigned'       => TRUE
             ],
             'o_key'           => [
-                'type'           => 'INT',
-                'constraint'     => 5,
+                'type'           => 'VARCHAR',
+                'constraint'     => 200,
+                'unique'         => true,
                 'unsigned'       => TRUE,
                 'null'           => true
             ],

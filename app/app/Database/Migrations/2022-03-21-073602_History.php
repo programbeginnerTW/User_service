@@ -23,7 +23,6 @@ class History extends Migration
             'o_key'           => [
                 'type'           => 'VARCHAR',
                 'constraint'     => 200,
-                'unique'         => true,
                 'unsigned'       => TRUE,
                 'null'           => true
             ],

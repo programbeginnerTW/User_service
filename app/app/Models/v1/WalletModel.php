@@ -48,10 +48,10 @@ class WalletModel extends Model
      * @param string $type
      * @param integer $balance
      * @param integer $addAmount
-     * @param integer|null $o_key
+     * @param string|null $o_key
      * @return boolean
      */
-    public function addBalanceTranscation(int $u_key, string $type, int $balance, int $addAmount, ?int $o_key = null): bool
+    public function addBalanceTranscation(int $u_key, string $type, int $balance, int $addAmount, ?string $o_key = null): bool
     {
         try {
             $this->db->transStart();
@@ -89,13 +89,13 @@ class WalletModel extends Model
      * 使用者錢包扣款
      *
      * @param integer $u_key
-     * @param integer $o_key
+     * @param string $o_key
      * @param string $type
      * @param integer $nowAmount
      * @param integer $total
      * @return boolean
      */
-    public function chargeTransaction(int $u_key, int $o_key, string $type, int $nowAmount, int $total): bool
+    public function chargeTransaction(int $u_key, string $o_key, string $type, int $nowAmount, int $total): bool
     {
         $history = [
             "u_key"  => $u_key,

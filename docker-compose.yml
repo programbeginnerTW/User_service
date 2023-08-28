@@ -3,6 +3,7 @@ version: "3"
 services:
     user-service:
         image: webdevops/php:8.1
+        platform: linux/x86_64
         ports:
             - 8084:8080
         working_dir: /app
@@ -14,8 +15,8 @@ services:
             - PHP_UPLOAD_MAX_FILESIZE=2048M
         volumes:
             - './app:/app'
-        command: >
-            bash -c "./rr serve"
+        # command: >
+        #     composer install && bash -c "./rr serve"
     user_DB:
         image: postgres:11.12
         environment:

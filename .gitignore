@@ -2,8 +2,6 @@
 # Operating Specific Junk Files
 #-------------------------
 
-./app/rr
-
 # OS X
 .DS_Store
 .AppleDouble
@@ -126,6 +124,9 @@ nb-configuration.xml
 app/results/
 app/phpunit*.xml
 app/.phpunit.*.cache
+
+# Server App
+app/rr
 
 #-------------------------
 # Development Database

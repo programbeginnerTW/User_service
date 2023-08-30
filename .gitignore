@@ -41,7 +41,6 @@ $RECYCLE.BIN/
 #-------------------------
 # These should never be under version control,
 # as it poses a security risk.
-.env
 .vagrant
 Vagrantfile
 
@@ -125,10 +124,13 @@ app/results/
 app/phpunit*.xml
 app/.phpunit.*.cache
 
+# Server App
+app/rr
+
 #-------------------------
 # Development Database
 #-------------------------
 
 /db/*
-/payment-db-data/*
-/payment-test-db-data/*
+/user-db-data/*
+/user-test-db-data/*

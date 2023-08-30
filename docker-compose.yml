@@ -3,8 +3,9 @@ version: "3"
 services:
     user-service:
         image: webdevops/php:8.1
+        platform: linux/x86_64
         ports:
-            - 8084:8080
+            - 8080:8080
         working_dir: /app
         environment: 
             - WEB_DOCUMENT_ROOT=/app/public
@@ -15,7 +16,7 @@ services:
         volumes:
             - './app:/app'
         command: >
-            bash -c "./rr serve"
+            bash -c "chmod 776 ./start_service.sh && ./start_service.sh"
     user_DB:
         image: postgres:11.12
         environment:
@@ -23,7 +24,7 @@ services:
             POSTGRES_USER: root
             POSTGRES_PASSWORD: root
         volumes:
-            - user-db-data:/var/lib/postgresql/data/
+            - ./user-db-data:/var/lib/postgresql/data/
         ports:
             - "8340:5432"
         command: ["postgres", "-c", "logging_collector=on", "-c", "log_destination=stderr", "-c", "max_connections=10000"]
@@ -35,7 +36,7 @@ services:
             POSTGRES_USER: root
             POSTGRES_PASSWORD: root
         volumes:
-            - user-test-db-data:/var/lib/postgresql/data/
+            - ./user-test-db-data:/var/lib/postgresql/data/
         ports:
             - "8341:5432"
         command: ["postgres", "-c", "logging_collector=on", "-c", "log_destination=stderr", "-c", "max_connections=10000"]

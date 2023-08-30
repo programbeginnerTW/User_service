@@ -9,10 +9,11 @@ class User extends Migration
     public function up()
     {
         $this->forge->addField([
+            //user table key
             'u_key'           => [
                 'type'           => 'INT',
                 'constraint'     => 5,
-                'unsigned'       => TRUE
+                'unsigned'       => TRUE,
             ],
             'balance'           => [
                 'type'           => 'INT',
@@ -31,6 +32,7 @@ class User extends Migration
             ]
         ]);
         $this->forge->addKey('u_key', TRUE);
+        $this->forge->addForeignKey('u_key', 'users', 'id', 'CASCADE', 'CASCADE');
         $this->forge->createTable('wallet');
     }
 

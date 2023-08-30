@@ -25,11 +25,10 @@ class WalletController extends BaseController
      * 使用者驗證與取得使用者餘額
      *
      * @param int $userKey
-     * @return void
      */
     public function show()
     {
-        $walletEntity = WalletBusinessLogic::getWallet($this->u_key);
+        $walletEntity = WalletBusinessLogic::getWallet((int)$this->u_key);
         if (is_null($walletEntity)) {
             return $this->fail("無此使用者錢包資訊", 404);
         }
@@ -49,7 +48,6 @@ class WalletController extends BaseController
      * [POST] /api/v1/wallet
      * 錢包儲值
      *
-     * @return void
      */
     public function create()
     {
@@ -84,7 +82,6 @@ class WalletController extends BaseController
      * [POST] /api/v1/wallet/compensate
      * 錢包補償
      *
-     * @return void
      */
     public function compensate()
     {
@@ -93,7 +90,7 @@ class WalletController extends BaseController
         $o_key     = $this->request->getPost("o_key");
         $type      = "compensate";
 
-        if (is_null(($u_key)) || is_null(($addAmount)) || is_null($o_key)) {
+        if (empty($u_key) || empty($addAmount) || empty($o_key)) {
             return $this->fail("輸入資料錯誤", 400);
         }
 
@@ -111,7 +108,9 @@ class WalletController extends BaseController
 
         // It may happened the restart scenario.
         if (count($historyArray) % 2 !== 1) {
-            return $this->failForbidden("此筆訂單使用者已補償。");
+            return $this->respond([
+                "msg" => "OK, 此筆訂單使用者已補償。"
+            ]);
         }
 
         $balance = $walletEntity->balance;
@@ -132,7 +131,6 @@ class WalletController extends BaseController
      * [POST] /api/v1/wallet/charge
      * 錢包扣款
      *
-     * @return void
      */
     public function charge()
     {
@@ -141,7 +139,7 @@ class WalletController extends BaseController
         $total = $this->request->getPost("total");
         $type  = "orderPayment";
 
-        if (is_null(($u_key)) || is_null(($total) || is_null($o_key))) {
+        if (empty($u_key) || empty($total) || empty($o_key)) {
             return $this->fail("輸入資料錯誤", 400);
         }
 
@@ -153,7 +151,9 @@ class WalletController extends BaseController
         $historyArray = WalletBusinessLogic::getWalletHistory($u_key, $o_key);
 
         if (count($historyArray) % 2 !== 0) {
-            return $this->failForbidden("此筆訂單使用者已付款。");
+            return $this->respond([
+                "msg" => "OK, 此筆訂單使用者已付款。"
+            ]);
         }
 
         $nowAmount = $walletEntity->balance;

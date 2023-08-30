@@ -48,6 +48,7 @@ class History extends Migration
             ]
         ]);
         $this->forge->addKey('h_key', TRUE);
+        $this->forge->addForeignKey('u_key', 'users', 'id', 'CASCADE', 'CASCADE');
         $this->forge->createTable('history');
     }
 

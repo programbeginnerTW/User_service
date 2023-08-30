@@ -1,6 +1,7 @@
 <?php
 
 namespace Config;
+use \CodeIgniter\Router\RouteCollection;
 
 // Create a new instance of our RouteCollection class.
 $routes = Services::routes();
@@ -33,21 +34,18 @@ $routes->setAutoRoute(true);
 // route since we don't have to scan directories.
 // $routes->get('/', 'Home::index');
 
-$routes->group(
-    'api/v1',
-    [
-        'namespace' => 'App\Controllers\v1',
-        'filter'    => 'user'
-    ],
-    function(\CodeIgniter\Router\RouteCollection $routes)
-    {
-        //Wallet
-        $routes->get('wallet', 'WalletController::show');
-        $routes->post('wallet', 'WalletController::create');
-        $routes->post('wallet/compensate', 'WalletController::compensate');
-        $routes->post('wallet/charge', 'WalletController::charge');
-    }
-);
+$routes->group('api/v1',['namespace' => 'App\Controllers\v1'], static function(RouteCollection $routes){
+    $routes->group('wallet', ['filter' => 'user', 'namespace' => 'App\Controllers\v1'], static function(RouteCollection $routes){
+        $routes->get('', 'WalletController::show');
+        $routes->post('', 'WalletController::create');
+        $routes->post('compensate', 'WalletController::compensate');
+        $routes->post('charge', 'WalletController::charge');
+    });
+    $routes->group('user', static function(RouteCollection $routes) {
+        $routes->post('login', 'UserController::login');
+        $routes->get('', 'UserController::verify');
+    });
+});
 
 $routes->group(
     'api/vDtm',
@@ -55,7 +53,7 @@ $routes->group(
         'namespace' => 'App\Controllers\Dtm',
         'filter'    => 'userDtm'
     ],
-    function (\CodeIgniter\Router\RouteCollection $routes) {
+    function (RouteCollection $routes) {
         //Wallet
         $routes->post('wallet/show', 'WalletController::show');
         $routes->post('wallet/create', 'WalletController::create');

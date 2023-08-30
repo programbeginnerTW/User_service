@@ -30,9 +30,9 @@ class WalletBusinessLogic
      *
      * @param integer $u_key
      * @param string $o_key
-     * @return array|null
+     * @return array
      */
-    public static function getWalletHistory(int $u_key, string $o_key, ?array $condition = null): ?array
+    public static function getWalletHistory(int $u_key, string $o_key, ?array $condition = null): array
     {
         $walletModel = new HistoryModel();
 

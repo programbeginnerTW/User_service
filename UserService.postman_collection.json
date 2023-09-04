@@ -24,7 +24,7 @@
 								}
 							}
 						},
-						"url": "{{url}}/api/v1/user/login"
+						"url": "{{user_service}}/api/v1/user/login"
 					},
 					"response": []
 				},
@@ -40,7 +40,7 @@
 						},
 						"method": "GET",
 						"header": [],
-						"url": "{{url}}/api/v1/user"
+						"url": "{{user_service}}/api/v1/user"
 					},
 					"response": []
 				}
@@ -61,7 +61,7 @@
 								"type": "text"
 							}
 						],
-						"url": "{{url}}/api/v1/wallet"
+						"url": "{{user_service}}/api/v1/wallet"
 					},
 					"response": []
 				},
@@ -89,9 +89,9 @@
 							]
 						},
 						"url": {
-							"raw": "{{url}}/api/v1/wallet",
+							"raw": "{{user_service}}/api/v1/wallet",
 							"host": [
-								"{{url}}"
+								"{{user_service}}"
 							],
 							"path": [
 								"api",
@@ -139,9 +139,9 @@
 							]
 						},
 						"url": {
-							"raw": "{{url}}/api/v1/wallet/charge",
+							"raw": "{{user_service}}/api/v1/wallet/charge",
 							"host": [
-								"{{url}}"
+								"{{user_service}}"
 							],
 							"path": [
 								"api",
@@ -190,9 +190,9 @@
 							]
 						},
 						"url": {
-							"raw": "{{url}}/api/v1/wallet/compensate",
+							"raw": "{{user_service}}/api/v1/wallet/compensate",
 							"host": [
-								"{{url}}"
+								"{{user_service}}"
 							],
 							"path": [
 								"api",

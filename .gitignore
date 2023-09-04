@@ -126,6 +126,8 @@ app/.phpunit.*.cache
 
 # Server App
 app/rr
+app/.rr.yaml
+app/app/Config/Burner.php
 
 #-------------------------
 # Development Database

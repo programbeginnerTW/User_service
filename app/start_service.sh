@@ -4,9 +4,8 @@ if [ ! -d "./vendor" ]; then
     composer install
 fi
 
-if [ ! -f "./rr" ]; then
-    php spark ciroad:init
-    chmod 776 ./rr
+if [ ! -f "./vendor/bin/rr_server" ]; then
+    php spark burner:init RoadRunner
 fi
 
-./rr serve
+php spark burner:start

@@ -103,7 +103,9 @@ class WalletController extends BaseController
         $historyArray = WalletBusinessLogic::getWalletHistory($u_key, $o_key);
 
         if (count($historyArray) === 0) {
-            return $this->failForbidden("此筆訂單付款尚未成立。");
+            return $this->respond([
+                'meg' => "此筆訂單付款尚未成立。"
+            ]);
         }
 
         // It may happened the restart scenario.

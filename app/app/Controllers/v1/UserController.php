@@ -1,10 +1,11 @@
 <?php
 
 namespace App\Controllers\v1;
-  
+
 use App\Controllers\v1\BaseController;
 use CodeIgniter\API\ResponseTrait;
 use App\Models\UserModel;
+use Stevenmaguire\OAuth2\Client\Provider\Keycloak;
 
 class UserController extends BaseController
 {
@@ -17,46 +18,22 @@ class UserController extends BaseController
      */
     public function login()
     {
-        $userModel = new UserModel();
-   
-        $email = $this->request->getJsonVar('email');
-        $password = $this->request->getJsonVar('password');
+        // 建立 Keycloak 提供者實例
+        $provider = new Keycloak([
+            'authServerUrl'         => 'https://keycloak.sdpmlab.org/auth',
+            'realm'                 => 'ZT',
+            'clientId'              => 'exp_userservice',
+            'clientSecret'          => 'UrPnxgyzZj1waUnF0wYYupUB87pafbcW',
+            'redirectUri'           => 'https://gitlab.sdpmlab.org/'
+        ]);
 
-        $user = $userModel->where('email', $email)->first();
-   
-        if(is_null($user)) {
-            return $this->respond(['error' => 'Invalid username or password.'], 401);
-        }
-   
-        $pwd_verify = password_verify($password, $user['password']);
-   
-        if(!$pwd_verify) {
-            return $this->respond(['error' => 'Invalid username or password.'], 401);
-        }
-  
-        $key = getenv('JWT_SECRET');
-        $iat = time(); // current timestamp value
-        $exp = $iat + 86400; // add 24 hours to timestamp value
-  
-        $payload = array(
-            "iss" => "Anser",
-            "aud" => "User",
-            "sub" => "AnserOrchestration",
-            "iat" => $iat, //Time the JWT issued at
-            "exp" => $exp, // Expiration time of token
-            "email" => $user['email'],
-            "u_key" => (int)$user['id']
-        );
-          
-        $token = \Firebase\JWT\JWT::encode($payload, $key, 'HS256');
-  
-        $response = [
-            'message' => 'Login Succesful',
-            'token' => $token
-        ];
-          
-        return $this->respond($response, 200);
+        // 取得授權 URL
+        $authUrl = $provider->getAuthorizationUrl();
+
+        // 導向 Keycloak 登入頁面
+        return redirect()->to($authUrl);
     }
+
 
     /**
      * [GET] /api/v1/user
@@ -65,28 +42,46 @@ class UserController extends BaseController
      */
     public function verify()
     {
-        $key = getenv('JWT_SECRET');
-        $header = $this->request->getHeader("Authorization");
+        // 取得 Authorization 標頭
+        $authorizationHeader = $this->request->getHeader("Authorization");
 
-        if(!$header) {
+        // 檢查 Authorization 標頭是否存在
+        if (!$authorizationHeader) {
             return $this->respond(['error' => 'No token provided.'], 401);
         }
 
-        $token = $header->getValue();
+        $accessToken = null;
+
+        // 檢查標頭是否包含 Bearer token
+        if (preg_match('/Bearer\s(\S+)/', $authorizationHeader->getValue(), $matches)) {
+            $accessToken = $matches[1];
+        } else {
+            return $this->respond(['error' => 'Invalid authorization header.'], 401);
+        }
+
+        // 使用 Keycloak PHP Adapter 解析並驗證令牌
         try {
-            $decoded = \Firebase\JWT\JWT::decode($token, new \Firebase\JWT\Key($key, 'HS256'));
-        } catch (\Firebase\JWT\ExpiredException $e) {
-            return $this->respond(['error' => 'Provided token is expired.'], 401);
+            $keycloak = new Keycloak([
+                'authServerUrl' => 'https://keycloak.sdpmlab.org/auth',
+                'realm' => 'ZT',
+                'clientId' => 'exp_userservice',
+                'clientSecret' => 'UrPnxgyzZj1waUnF0wYYupUB87pafbcW',
+                'redirectUri' => 'https://testuserservice.sdpmlab.org/'
+            ]);
+            $token = new \League\OAuth2\Client\Token\AccessToken([
+                'access_token' => $accessToken,
+            ]);
+            $resourceOwner = $keycloak->getResourceOwner($token);
+            $decodedToken = $resourceOwner->toArray();
         } catch (\Exception $ex) {
             return $this->respond(['error' => 'Invalid token provided.'], 401);
         }
 
         $response = [
             'message' => 'Token is valid',
-            'data' => $decoded
+            'data' => $decodedToken
         ];
 
         return $this->respond($response, 200);
     }
-  
 }

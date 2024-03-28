@@ -10,7 +10,8 @@
         "mbezhanov/faker-provider-collection": "^2.0",
         "firebase/php-jwt": "^6.8",
         "monken/codeigniter4-burner-roadrunner": "^1.0@beta",
-        "sdpmlab/anser": "^0.2.6"
+        "sdpmlab/anser": "^0.2.6",
+        "stevenmaguire/oauth2-keycloak": "^5.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.19",
